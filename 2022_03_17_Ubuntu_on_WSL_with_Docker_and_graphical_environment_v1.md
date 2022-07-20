@@ -65,7 +65,7 @@ More information here: https://docs.microsoft.com/en-us/windows/wsl/compare-vers
 3. Allow the current user to execute Docker without using `sudo` by typing the following two commands:
     ```
     sudo usermod -aG docker $USER
-    newgrp docker 
+    newgrp docker
     ```
 
     Please, be aware that the `docker` group grants privileges equivalent to the `root` user.
@@ -76,17 +76,23 @@ More information here: https://docs.microsoft.com/en-us/windows/wsl/compare-vers
     ```
     DOCKER_OPTS="--insecure-registry=registry1.example.com --insecure-registry=registry2.example.com"
     ```
-5. Configure the Docker daemon to start when `bash` is started, something that happens when you open the app `Ubuntu on Windows`.
-    1. Type `sudo visudo`.
-    2. Add the following at the end of the file to indicate that the user `unix` does not need to indicate the password to start /etc/init.d/docker, type CTRL+X and type `y` to save the changes to the file:
+5. Configure the Docker daemon to auto start when start WSL. On the
+    1. (Windows 11 with WSL2) Add the necessary commands to the `[boot]`section in `/etc/wsl.conf`. You might need to create the file.
         ```
-        # Docker daemon specification (added by Luis B.)
-        unix ALL=(ALL) NOPASSWD: /etc/init.d/docker
+        [boot]
+        command="service docker start"
         ```
-    3. Type `nano ~/.bashrc`, add the following line at the end of the file, type CTRL+X and type `y` to save the changes to the file:
-        ```
-        sudo /etc/init.d/docker start
-        ```
+    2. (Windows 10 only) Configure the Docker daemon to start when `bash` is started, something that happens when you open the app `Ubuntu on Windows`.
+        1. Type `sudo visudo`.
+        2. Add the following at the end of the file to indicate that the user `unix` does not need to indicate the password to start /etc/init.d/docker, type CTRL+X and type `y` to save the changes to the file:
+            ```
+            # Docker daemon specification (added by Luis B.)
+            unix ALL=(ALL) NOPASSWD: /etc/init.d/docker
+            ```
+        3. Type `nano ~/.bashrc`, add the following line at the end of the file, type CTRL+X and type `y` to save the changes to the file:
+            ```
+            sudo /etc/init.d/docker start
+            ```
 6. If you want to install Docker Compose, type:
     ```
     sudo apt install -y docker-compose
